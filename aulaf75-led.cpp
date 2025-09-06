@@ -48,7 +48,7 @@ std::vector<BYTE> HexStringToBytes(const std::string& hex)
 	for (size_t i = 0; i < clean.size(); i += 2)
 	{
 		std::string byteStr = clean.substr(i, 2);
-		BYTE b = static_cast<BYTE>(strtol(byteStr.c_str(), nullptr, 16));
+		auto b = static_cast<BYTE>(strtol(byteStr.c_str(), nullptr, 16));
 		bytes.push_back(b);
 	}
 	return bytes;
@@ -59,8 +59,8 @@ HANDLE OpenRGBInterface()
 	GUID hidGuid;
 	HidD_GetHidGuid(&hidGuid);
 
-	HDEVINFO deviceInfo = SetupDiGetClassDevs(&hidGuid, nullptr, nullptr,
-	                                          DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+	auto deviceInfo = SetupDiGetClassDevs(&hidGuid, nullptr, nullptr,
+	                                      DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 	if (deviceInfo == INVALID_HANDLE_VALUE)
 	{
 		throw std::runtime_error("SetupDiGetClassDevs failed");
@@ -88,11 +88,11 @@ HANDLE OpenRGBInterface()
 				path.find(L"pid_010c") != std::wstring::npos &&
 				path.find(L"col06") != std::wstring::npos)
 			{
-				HANDLE hDevice = CreateFile(path.c_str(),
-				                            GENERIC_READ | GENERIC_WRITE,
-				                            FILE_SHARE_READ | FILE_SHARE_WRITE,
-				                            nullptr, OPEN_EXISTING,
-				                            0, nullptr);
+				auto hDevice = CreateFile(path.c_str(),
+				                          GENERIC_READ | GENERIC_WRITE,
+				                          FILE_SHARE_READ | FILE_SHARE_WRITE,
+				                          nullptr, OPEN_EXISTING,
+				                          0, nullptr);
 
 				if (hDevice != INVALID_HANDLE_VALUE)
 				{
@@ -228,11 +228,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int)
 	wc.lpszClassName = L"LedControlWindow";
 	RegisterClass(&wc);
 
-	HWND hwnd = CreateWindowEx(0, wc.lpszClassName, L"LedControlWindow",
+	auto hwnd = CreateWindowEx(0, wc.lpszClassName, L"LedControlWindow",
 	                           0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, hInstance, nullptr);
 
-	HPOWERNOTIFY hNotify = RegisterPowerSettingNotification(hwnd,
-	                                                        &GUID_CONSOLE_DISPLAY_STATE, DEVICE_NOTIFY_WINDOW_HANDLE);
+	auto hNotify = RegisterPowerSettingNotification(hwnd,
+	                                                &GUID_CONSOLE_DISPLAY_STATE, DEVICE_NOTIFY_WINDOW_HANDLE);
 
 	std::cout << "Listening for display on/off events... (Ctrl+C to exit)" << std::endl;
 
