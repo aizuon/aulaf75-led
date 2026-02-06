@@ -18,7 +18,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
       
     - name: Build Release x64
-      run: MSBuild aulaf75-led.sln /p:Configuration=Release /p:Platform=x64 /t:Rebuild
+      run: MSBuild aulaf75-led.sln /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143 /t:Rebuild
       
     - name: Upload artifact
       uses: actions/upload-artifact@v4
